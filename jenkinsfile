@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    environment {
+        registry = "nimishaanilkumar/kube_frontend"
+        registeryCredentials = "dockerhub"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                cd $WORKSPACE
+                def dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
+            }
+        }
+        stage('Test'){
+
+        }
+        stage('Artifactory'){
+
+        }
+        stage('Deploy to pre-prod'){
+
+        }
+        stage('Pre-prod test'){
+
+        }
+        stage('Approval'){
+
+        }
+        stage('Deploy to prod'){
+
+        }
+        stage('Notification'){
+
+        }
+    }
+    post {
+        always {
+            sh "docker rmi $registry:$BUILD_NUMBER"
+        }
+    }
+}
